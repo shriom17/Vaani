@@ -651,3 +651,197 @@ a.secondary {
     filter: invert();
   }
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  /* Hide sidebar by default on mobile */
+  .sidebar {
+    position: fixed;
+    height: 100vh;
+    z-index: 200;
+    width: 280px;
+  }
+  
+  .sidebarClosed {
+    transform: translateX(-100%);
+  }
+  
+  /* Toggle button positioning for mobile */
+  .toggleSidebar {
+    top: 1rem;
+    left: 1rem;
+    transform: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 150;
+  }
+  
+  /* Header adjustments */
+  .header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .headerContent {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .logo {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .authButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Chat container */
+  .chatContainer {
+    padding: 1rem;
+  }
+  
+  /* Messages */
+  .messageAvatar {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  
+  .messageName {
+    font-size: 0.8rem;
+  }
+  
+  .messageText {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Input area */
+  .inputContainer {
+    padding: 0.75rem 1rem;
+  }
+  
+  .input {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .sendButton {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .sendButton svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* Sidebar adjustments */
+  .newChatButton {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+  
+  .conversationItem {
+    padding: 0.625rem;
+  }
+  
+  .conversationItemTitle {
+    font-size: 0.8rem;
+  }
+  
+  .conversationPreview {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .logo {
+    font-size: 1.1rem;
+  }
+  
+  .subtitle {
+    display: none;
+  }
+  
+  .authButton {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.7rem;
+  }
+  
+  .chatContainer {
+    padding: 0.75rem;
+  }
+  
+  .messagesWrapper {
+    gap: 1rem;
+  }
+  
+  .message {
+    gap: 0.75rem;
+  }
+  
+  .messageAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  
+  .messageText {
+    font-size: 0.8rem;
+    padding: 0.625rem 0.875rem;
+  }
+  
+  .inputContainer {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .inputForm {
+    gap: 0.5rem;
+  }
+  
+  .input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8rem;
+  }
+  
+  .sendButton {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .sendButton svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chatContainer {
+    padding: 0.5rem;
+  }
+  
+  .header {
+    padding: 0.5rem 1rem;
+  }
+  
+  .inputContainer {
+    padding: 0.5rem 1rem;
+  }
+}

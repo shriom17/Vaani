@@ -256,16 +256,104 @@
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
   .authCard {
     padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .logoIcon {
+    font-size: 2.5rem;
   }
 
   .logoText {
     font-size: 1.75rem;
   }
+  
+  .tab {
+    font-size: 0.9rem;
+    padding: 0.625rem;
+  }
+  
+  .input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9rem;
+  }
+  
+  .submitButton {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
 
   .socialButtons {
     flex-direction: column;
+  }
+  
+  .socialButton {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .authCard {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+  
+  .logoIcon {
+    font-size: 2rem;
+  }
+  
+  .logoText {
+    font-size: 1.5rem;
+  }
+  
+  .logoSubtext {
+    font-size: 0.8rem;
+  }
+  
+  .tabs {
+    padding: 0.2rem;
+  }
+  
+  .tab {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+  
+  .label {
+    font-size: 0.8rem;
+  }
+  
+  .input {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .submitButton {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .divider {
+    font-size: 0.8rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+  
+  .socialButton {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .toggleText {
+    font-size: 0.85rem;
   }
 }
