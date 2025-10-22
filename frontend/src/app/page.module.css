@@ -35,6 +35,54 @@
 .sidebarHeader {
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Sidebar logo (hidden on desktop, shown on mobile) */
+.sidebarLogo {
+  display: none;
+}
+
+.sidebarLogoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.sidebarLogoSubtext {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Sidebar auth button */
+.sidebarAuthButton {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: none; /* Hidden on desktop */
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.sidebarAuthButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .newChatButton {
@@ -186,7 +234,7 @@
   font-weight: 500;
 }
 
-/* Toggle Sidebar Button */
+/* Toggle Sidebar Button (Desktop) */
 .toggleSidebar {
   position: fixed;
   top: 50%;
@@ -202,11 +250,43 @@
   cursor: pointer;
   z-index: 101;
   transition: all 0.3s ease;
+  display: block;
 }
 
 .toggleSidebar:hover {
   background: rgba(0, 0, 0, 0.7);
   padding-right: 0.75rem;
+}
+
+/* Hamburger Menu Button (Mobile) */
+.hamburgerButton {
+  display: none; /* Hidden on desktop */
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  color: #8b5cf6;
+  transition: all 0.3s ease;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.hamburgerButton:hover {
+  background: rgba(139, 92, 246, 0.2);
+  transform: scale(1.05);
+}
+
+/* Overlay for mobile */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 150;
+  display: none; /* Hidden on desktop */
 }
 
 /* Main Content */
@@ -654,50 +734,97 @@ a.secondary {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
-  /* Hide sidebar by default on mobile */
+  /* Show hamburger button on mobile */
+  .hamburgerButton {
+    display: flex;
+  }
+  
+  /* Hide desktop toggle button on mobile */
+  .toggleSidebar {
+    display: none;
+  }
+  
+  /* Show overlay when sidebar is open */
+  .sidebarOpen ~ .overlay {
+    display: block;
+  }
+  
+  .overlay {
+    display: none;
+  }
+  
+  .sidebarOpen + .overlay {
+    display: block;
+  }
+  
+  /* Sidebar full height on mobile */
   .sidebar {
     position: fixed;
     height: 100vh;
     z-index: 200;
-    width: 280px;
+    width: 85%;
+    max-width: 320px;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
   }
   
   .sidebarClosed {
     transform: translateX(-100%);
   }
   
-  /* Toggle button positioning for mobile */
-  .toggleSidebar {
-    top: 1rem;
-    left: 1rem;
-    transform: none;
-    border-radius: 8px;
-    padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 150;
+  .sidebarHeader {
+    padding: 1.25rem;
+  }
+  
+  /* Show logo and auth button in sidebar on mobile */
+  .sidebarLogo {
+    display: block;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+  }
+  
+  .sidebarLogoText {
+    font-size: 1.75rem;
+  }
+  
+  .sidebarAuthButton {
+    display: flex;
+  }
+  
+  /* Hide header auth button on mobile */
+  .authButton {
+    display: none;
   }
   
   /* Header adjustments */
   .header {
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.5rem;
+    position: relative;
   }
   
   .headerContent {
-    flex-direction: row;
-    gap: 0.5rem;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .headerLeft {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .headerRight {
+    display: none;
   }
   
   .logo {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
   
   .subtitle {
-    font-size: 0.75rem;
-  }
-  
-  .authButton {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
   }
   
   /* Chat container */
@@ -705,83 +832,111 @@ a.secondary {
     padding: 1rem;
   }
   
+  .messagesWrapper {
+    gap: 1.25rem;
+  }
+  
   /* Messages */
+  .message {
+    gap: 0.75rem;
+  }
+  
   .messageAvatar {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
   }
   
   .messageName {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
   
   .messageText {
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    padding: 0.875rem 1.125rem;
   }
   
   /* Input area */
   .inputContainer {
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+  }
+  
+  .inputForm {
+    gap: 0.75rem;
   }
   
   .input {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.9rem;
+    border-radius: 24px;
   }
   
   .sendButton {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
   }
   
   .sendButton svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
   
   /* Sidebar adjustments */
   .newChatButton {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .conversationList {
+    padding: 1rem;
   }
   
   .conversationItem {
-    padding: 0.625rem;
+    padding: 0.875rem;
+    margin-bottom: 0.625rem;
   }
   
   .conversationItemTitle {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
   
   .conversationPreview {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+  }
+  
+  .userProfile {
+    padding: 1rem;
   }
 }
 
 /* Extra small mobile devices */
 @media (max-width: 480px) {
+  .hamburgerButton {
+    width: 36px;
+    height: 36px;
+    left: 0.75rem;
+  }
+  
+  .hamburgerButton svg {
+    width: 22px;
+    height: 22px;
+  }
+  
   .sidebar {
-    width: 100%;
+    width: 90%;
     max-width: 300px;
   }
   
   .header {
-    padding: 0.5rem 0.75rem;
+    padding: 0.875rem 1rem;
   }
   
   .logo {
-    font-size: 1.1rem;
+    font-size: 1.35rem;
   }
   
   .subtitle {
-    display: none;
-  }
-  
-  .authButton {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   
   .chatContainer {

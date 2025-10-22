@@ -151,6 +151,21 @@ export default function Home() {
       {/* Sidebar */}
       <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
         <div className={styles.sidebarHeader}>
+          {/* Logo in sidebar for mobile */}
+          <div className={styles.sidebarLogo}>
+            <h2 className={styles.sidebarLogoText}>Vaani</h2>
+            <p className={styles.sidebarLogoSubtext}>AI Assistant</p>
+          </div>
+          
+          {/* Login button in sidebar */}
+          <a href="/auth" className={styles.sidebarAuthButton}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Login / Sign Up
+          </a>
+          
           <button className={styles.newChatButton} onClick={handleNewChat}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14"/>
@@ -193,26 +208,41 @@ export default function Home() {
         </div>
       </aside>
 
-      {/* Toggle Sidebar Button */}
-      <button
-        className={styles.toggleSidebar}
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        title={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          {isSidebarOpen ? (
-            <path d="M15 18l-6-6 6-6"/>
-          ) : (
-            <path d="M9 18l6-6-6-6"/>
-          )}
-        </svg>
-      </button>
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div 
+          className={styles.overlay}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Main Content */}
       <div className={styles.mainContent}>
         {/* Header */}
         <header className={styles.header}>
           <div className={styles.headerContent}>
+            {/* Hamburger Menu Button (Mobile) */}
+            <button
+              className={styles.hamburgerButton}
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              title={isSidebarOpen ? 'Close menu' : 'Open menu'}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {isSidebarOpen ? (
+                  <>
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </>
+                ) : (
+                  <>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </>
+                )}
+              </svg>
+            </button>
+            
             <div className={styles.headerLeft}>
               <h1 className={styles.logo}>Vaani</h1>
               <p className={styles.subtitle}>AI Assistant</p>
