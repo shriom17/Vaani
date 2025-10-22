@@ -1,21 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I\'m Vaani, your AI assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [conversations, setConversations] = useState([
-    { id: 1, title: 'Getting Started with Vaani', timestamp: '2 hours ago', preview: 'Hello! I\'m Vaani...' },
-    { id: 2, title: 'Project Ideas Discussion', timestamp: 'Yesterday', preview: 'Can you help me with...' },
-    { id: 3, title: 'Code Review Session', timestamp: '2 days ago', preview: 'I need help reviewing...' },
-  ]);
-  const [activeConversationId, setActiveConversationId] = useState(1);
+  const [conversations, setConversations] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState(null);
+  const [currentConversationSaved, setCurrentConversationSaved] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    // Load conversations from localStorage
+    const savedConversations = localStorage.getItem('vaani_conversations');
+    if (savedConversations) {
+      setConversations(JSON.parse(savedConversations));
+    }
+  }, []);
+
+  // Auto-save conversation when messages change
+  useEffect(() => {
+    if (!mounted || messages.length <= 1) return;
+
+    // Generate title from first user message
+    const firstUserMessage = messages.find(m => m.role === 'user');
+    if (!firstUserMessage) return;
+
+    const title = firstUserMessage.content.slice(0, 50) + (firstUserMessage.content.length > 50 ? '...' : '');
+    const preview = messages[messages.length - 1].content.slice(0, 60) + '...';
+    const timestamp = 'Just now';
+
+    if (!currentConversationSaved) {
+      // Create new conversation
+      const newConv = {
+        id: Date.now(),
+        title,
+        timestamp,
+        preview,
+        messages: [...messages]
+      };
+      
+      setConversations(prev => {
+        const updated = [newConv, ...prev];
+        localStorage.setItem('vaani_conversations', JSON.stringify(updated));
+        return updated;
+      });
+      
+      setActiveConversationId(newConv.id);
+      setCurrentConversationSaved(true);
+    } else {
+      // Update existing conversation
+      setConversations(prev => {
+        const updated = prev.map(conv => 
+          conv.id === activeConversationId 
+            ? { ...conv, preview, timestamp, messages: [...messages] }
+            : conv
+        );
+        localStorage.setItem('vaani_conversations', JSON.stringify(updated));
+        return updated;
+      });
+    }
+  }, [messages, mounted, currentConversationSaved, activeConversationId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,14 +77,33 @@ export default function Home() {
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call later)
-    setTimeout(() => {
+    try {
+      // Call the API endpoint
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [...messages, { role: 'user', content: userMessage }]
+        }),
+      });
+
+      const data = await response.json();
+      
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'This is a placeholder response. Connect me to your AI backend to enable real conversations!' 
+        content: data.message || 'Sorry, I encountered an error.'
       }]);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, I encountered an error. Please try again.'
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleNewChat = () => {
@@ -41,23 +111,40 @@ export default function Home() {
       { role: 'assistant', content: 'Hello! I\'m Vaani, your AI assistant. How can I help you today?' }
     ]);
     setActiveConversationId(null);
+    setCurrentConversationSaved(false);
   };
 
   const handleSelectConversation = (conversationId) => {
-    setActiveConversationId(conversationId);
-    // In a real app, load the conversation messages from your backend
-    setMessages([
-      { role: 'assistant', content: 'Loading previous conversation...' }
-    ]);
+    const conversation = conversations.find(conv => conv.id === conversationId);
+    if (conversation) {
+      setMessages(conversation.messages);
+      setActiveConversationId(conversationId);
+      setCurrentConversationSaved(true);
+    }
   };
 
   const handleDeleteConversation = (conversationId, e) => {
     e.stopPropagation();
-    setConversations(prev => prev.filter(conv => conv.id !== conversationId));
+    setConversations(prev => {
+      const updated = prev.filter(conv => conv.id !== conversationId);
+      localStorage.setItem('vaani_conversations', JSON.stringify(updated));
+      return updated;
+    });
     if (activeConversationId === conversationId) {
       handleNewChat();
     }
   };
+
+  // Format timestamp
+  const formatTimestamp = (timestamp) => {
+    if (timestamp === 'Just now') return timestamp;
+    return timestamp;
+  };
+
+  // Prevent hydration error by not rendering until mounted
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
