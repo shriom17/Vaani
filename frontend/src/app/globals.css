@@ -20,7 +20,9 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  height: 100%;
+  /* Use dynamic viewport height on mobile; fallback to 100% */
+  height: 100dvh;
+  min-height: 100%;
 }
 
 body {
